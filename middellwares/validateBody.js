@@ -2,6 +2,11 @@ const { HttpError } = require("../helpers");
 
 const validateBody = (shema) => {
   const checkValidate = (req, res, next) => {
+    if (req.method === 'PATCH' && !req.body) {
+      next(HttpError(400, 'missing field favorite'));
+      return;
+    }
+
     if (Object.keys(req.body).length === 0) {
       next(HttpError(400, "missing fields"));
       return;
@@ -20,4 +25,14 @@ const validateBody = (shema) => {
   return checkValidate;
 };
 
-module.exports = validateBody;
+const validateFavorites = schema => {
+  const func = (req, res, next)=> {
+    if(Object.keys(req.body).length === 0) {
+      next(HttpError(400, "missing field favorite"));
+    }
+    next()
+  }
+  return func
+}
+
+module.exports = {validateBody,validateFavorites};
