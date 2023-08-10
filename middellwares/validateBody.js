@@ -1,6 +1,6 @@
 const { HttpError } = require("../helpers");
 
-const validateBody = (shema) => {
+const validateBody = (schema) => {
   const checkValidate = (req, res, next) => {
     if (req.method === 'PATCH' && !req.body) {
       next(HttpError(400, 'missing field favorite'));
@@ -12,7 +12,7 @@ const validateBody = (shema) => {
       return;
     }
 
-    const { error } = shema.validate(req.body);
+    const { error } = schema.validate(req.body);
     if (error) {
       error.details[0].type === "any.required"
         ? next(
@@ -25,14 +25,22 @@ const validateBody = (shema) => {
   return checkValidate;
 };
 
-const validateFavorites = schema => {
-  const func = (req, res, next)=> {
-    if(Object.keys(req.body).length === 0) {
+const validateFavorites = (schema) => {
+  const func = (req, res, next) => {
+    if (!req.body.favorite) {
       next(HttpError(400, "missing field favorite"));
+      return;
     }
-    next()
-  }
-  return func
-}
+
+    const { error } = schema.validate(req.body.favorite);
+    if (error) {
+      next(HttpError(400, error.message));
+      return;
+    }
+
+    next();
+  };
+  return func;
+};
 
 module.exports = {validateBody,validateFavorites};
