@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ctrl = require('../../controllers/contacts')
 
-const { validateBody, isValidId,validateFavorites } = require('../../middellwares');
+const { validateBody, isValidId, validateFavorites } = require('../../middellwares');
 const {schemas} = require("../../models/contact")
 
 router.get('/', ctrl.getListContacts)
