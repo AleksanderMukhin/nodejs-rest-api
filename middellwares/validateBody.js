@@ -27,12 +27,12 @@ const validateBody = (schema) => {
 
 const validateFavorites = (schema) => {
   const func = (req, res, next) => {
-    if (!req.body.favorite) {
+    if (Object.keys(req.body) != "favorite") {
       next(HttpError(400, "missing field favorite"));
       return;
     }
 
-    const { error } = schema.validate(req.body.favorite);
+    const { error } = schema.validate(req.body);
     if (error) {
       next(HttpError(400, error.message));
       return;
