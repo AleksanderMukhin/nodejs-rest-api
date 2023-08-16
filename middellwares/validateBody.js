@@ -43,4 +43,20 @@ const validateFavorites = (schema) => {
   return func;
 };
 
-module.exports = {validateBody,validateFavorites};
+const validateEmailBody = (schema) => {
+  const func = (req, res, next) => {
+    if (Object.keys(req.body).length === 0) {
+      next(HttpError(400, "missing required field email"));
+      return;
+    }
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+      next(HttpError(400, error.message));
+    }
+    next();
+  };
+  return func;
+};
+
+module.exports = {validateBody,validateFavorites,validateEmailBody};
